@@ -29,14 +29,22 @@ function openModal(e) {
   if (!e.target.classList.contains("gallery__image")) {
     return;
   }
-  const instance = basicLightbox.create(`
-  <img src=${e.target.dataset.source}>`);
+  const instance = basicLightbox.create(
+    `
+  <img src=${e.target.dataset.source}>`,
+    {
+      onShow: () => {
+        document.addEventListener("keydown", OnEscClose);
+      },
+      onClose: () => {
+        document.removeEventListener("keydown", OnEscClose);
+      },
+    }
+  );
 
   instance.show();
 
-  galleryList.addEventListener("keydown", closeOnEsc);
-
-  function closeOnEsc(e) {
+  function OnEscClose(e) {
     if (e.code === "Escape") {
       instance.close();
     }
